@@ -61,6 +61,35 @@
     .btn-edit:hover { background: #ff9800; color: white; }
     .btn-delete:hover { background: #f44336; color: white; }
 
+    .btn-absensi {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e3f2fd;
+        color: #2196f3;
+        border: none;
+    }
+    .btn-absensi:hover {
+        background: #2196f3;
+        color: white;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    .bg-success {
+        background: linear-gradient(135deg, #1cc88a, #17a673) !important;
+    }
+    .bg-secondary {
+        background: #858796 !important;
+    }
+
     /* Search Box */
     .search-wrapper { position: relative; width: 260px; }
     .search-wrapper input { border-radius: 10px; padding-left: 35px; border: 1.5px solid #e3e6f0; height: 38px; font-size: 0.8rem; }
@@ -109,7 +138,7 @@
                 </form>
             </div>
             <a href="{{ route('instruktur.jsenam.create') }}" class="btn btn-primary shadow-sm px-3 d-flex align-items-center" style="border-radius: 10px; background: var(--primary-gradient); border: none; font-size: 0.85rem;">
-                <i class="bi bi-plus-lg me-2"></i> Tambah Baru
+                <i class="bi bi-plus-lg me-2"></i> Tambah Jadwal
             </a>
         </div>
     </div>
@@ -119,11 +148,12 @@
             <table class="table table-custom">
                 <thead>
                     <tr>
-                        <th width="50" class="text-center">#</th>
+                        <th width="50" class="text-center">No</th>
                         <th>Instruktur</th>
-                        <th>Waktu Pelaksanaan</th>
+                        <th>Tanggal</th>
                         <th>Lokasi/Tempat</th>
                         <th>Catatan</th>
+                        <th>Kehadiran</th>
                         <th width="120" class="text-center">Opsi</th>
                     </tr>
                 </thead>
@@ -141,8 +171,8 @@
                         </td>
                         <td>
                             <div class="date-pill">
-                                <i class="bi bi-calendar3"></i>
-                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+
+                                {{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('d F Y') }}
                             </div>
                         </td>
                         <td>
@@ -157,6 +187,11 @@
                             </span>
                         </td>
                         <td>
+                            <span class="badge {{ $item->total_hadir > 0 ? 'bg-success' : 'bg-secondary' }}">
+                                {{ $item->total_hadir > 0 ? $item->total_hadir . ' Hadir' : 'Belum Ada' }}
+                            </span>
+                        </td>
+                        <td>
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('instruktur.jsenam.edit', $item->id_senam) }}" class="btn-edit" title="Edit">
                                     <i class="bi bi-pencil-square"></i>
@@ -168,12 +203,17 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+                                <!-- <a href="{{ route('instruktur.absensi.show', $item->id_senam) }}"
+                                class="btn-absensi"
+                                title="Kelola Absensi">
+                                    <i class="bi bi-clipboard-check"></i>
+                                </a> -->
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="7" class="text-center py-5">
                             <div class="text-muted">
                                 <i class="bi bi-folder-x display-4 text-light"></i>
                                 <p class="mt-2 small">Data jadwal tidak ditemukan.</p>
@@ -190,9 +230,55 @@
             <div class="text-muted fw-bold" style="font-size: 0.75rem;">
                 Menampilkan <span class="text-primary">{{ $jadwal->firstItem() ?? 0 }}</span> - <span class="text-primary">{{ $jadwal->lastItem() ?? 0 }}</span> dari <span class="text-primary">{{ $jadwal->total() }}</span> data
             </div>
-            <div class="mt-3 mt-md-0">
-                {{ $jadwal->appends(request()->query())->links('pagination::bootstrap-5') }}
-            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+
+                    {{-- PREVIOUS --}}
+                    @if ($jadwal->onFirstPage())
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="bi bi-chevron-left"></i>
+                            </span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $jadwal->previousPageUrl() }}">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                    @endif
+                    {{-- NOMOR HALAMAN --}}
+                    @php
+                        $start = max($jadwal->currentPage() - 1, 1);
+                        $end = min($start + 2, $jadwal->lastPage());
+                        if (($end - $start) < 2) {
+                            $start = max($end - 2, 1);
+                        }
+                    @endphp
+                    @for ($i = $start; $i <= $end; $i++)
+                        <li class="page-item {{ $jadwal->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $jadwal->url($i) }}">
+                                {{ $i }}
+                            </a>
+                        </li>
+                    @endfor
+                    {{-- NEXT --}}
+                    @if ($jadwal->hasMorePages())
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $jadwal->nextPageUrl() }}">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    @else
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="bi bi-chevron-right"></i>
+                            </span>
+                        </li>
+                    @endif
+
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

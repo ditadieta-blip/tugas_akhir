@@ -163,23 +163,33 @@
             @php
                 $status = $pendaftaranIds[$item->id_wisata] ?? null;
 
-                // Status tambahan: tidak mengikuti
-                if (!$status && $item->is_open == 0) {
+                $today = \Carbon\Carbon::today();
+                $tanggal = \Carbon\Carbon::parse($item->tanggal_wisata);
+
+                // 🚀 AUTO SELESAI
+                if ($status == 'menunggu_perjalanan' && $today >= $tanggal) {
+                    $status = 'selesai';
+                }
+
+                // ❗ tidak daftar
+                if (!$status && $today >= $tanggal) {
                     $status = 'tidak_mengikuti';
                 }
 
                 $badgeClass = match($status) {
-                    'diterima' => 'bg-success text-white',
+                    'menunggu_pembayaran' => 'bg-warning text-dark',
+                    'menunggu_perjalanan' => 'bg-primary text-white',
+                    'selesai' => 'bg-success text-white',
                     'ditolak' => 'bg-danger text-white',
-                    'menunggu' => 'bg-warning text-dark',
                     'tidak_mengikuti' => 'bg-secondary text-white',
                     default => null
                 };
 
                 $badgeText = match($status) {
-                    'diterima' => 'Terdaftar',
+                    'menunggu_pembayaran' => 'Menunggu Pembayaran',
+                    'menunggu_perjalanan' => 'Menunggu Perjalanan',
+                    'selesai' => 'Selesai',
                     'ditolak' => 'Ditolak',
-                    'menunggu' => 'Menunggu',
                     'tidak_mengikuti' => 'Tidak Mengikuti',
                     default => null
                 };
@@ -208,21 +218,28 @@
                                 </div>
                                 <div class="info-item">
                                     <i class="bi bi-calendar-event"></i>
-                                    <span>{{ \Carbon\Carbon::parse($item->tanggal_wisata)->translatedFormat('d M Y') }}</span>
+                                    <span>{{ \Carbon\Carbon::parse($item->tanggal_wisata)->locale('id') ->translatedFormat('d F Y') }}</span>
                                 </div>
                             </div>
 
                             <div class="mt-auto border-top pt-3">
                                 <div class="price-info mb-3 text-center">
-                                    <span class="text-muted d-block" style="font-size: 0.65rem;">Biaya</span>
+                                    <span class="text-muted d-block" style="font-size: 0.65rem;">Biaya/Orang</span>
                                     <span class="price-tag">Rp {{ number_format($item->biaya_wisata, 0, ',', '.') }}</span>
                                 </div>
 
                                 @if($item->is_open == 1)
-                                    @if($status)
-                                        <button class="btn btn-light btn-register w-100 disabled text-muted border">
-                                            <i class="bi bi-check2-all"></i> Sudah Terdaftar
+
+                                    @if($item->kuota <= 0)
+                                        <button class="btn btn-secondary btn-register w-100" disabled>
+                                            Kuota Habis
                                         </button>
+
+                                    @elseif($status)
+                                        <button class="btn btn-light btn-register w-100 disabled text-muted border">
+                                            {{ $badgeText }}
+                                        </button>
+
                                     @else
                                         <form action="{{ route('anggota.dafwisata.store') }}" method="POST">
                                             @csrf
@@ -232,6 +249,7 @@
                                             </button>
                                         </form>
                                     @endif
+
                                 @else
                                     <button class="btn btn-secondary btn-register w-100 opacity-50" disabled>
                                         Pendaftaran Ditutup

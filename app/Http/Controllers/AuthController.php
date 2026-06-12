@@ -35,8 +35,6 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
-
-       
         return redirect('/redirect');
     }
 
@@ -78,11 +76,9 @@ class AuthController extends Controller
         ]);
 
         $role = Role::where('nama_role', 'anggota')->first();
-
         if (!$role) {
             return back()->with('error', 'Role anggota tidak ditemukan.');
         }
-
         User::create([
             'nama_user' => $request->name,
             'alamat' => $request->address,
@@ -91,8 +87,6 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'id_role' => $role->id_role,
         ]);
-
-        return redirect()->route('login')
-            ->with('success', 'Registrasi berhasil. Silakan login.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan masuk menggunakan akun Anda.');
     }
 }

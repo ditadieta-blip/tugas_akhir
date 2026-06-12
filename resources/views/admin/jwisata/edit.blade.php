@@ -7,13 +7,12 @@
     }
 
     body {
-        overflow: hidden; /* Mencegah scroll pada body desktop */
         background-color: #f8f9fc;
     }
 
     .main-container {
-        padding: 15px;
-        height: calc(100vh - 70px); 
+        padding: 30px 15px;
+        min-height: calc(100vh - 70px); 
         display: flex;
         align-items: center;
         justify-content: center;
@@ -21,79 +20,101 @@
 
     .card-form {
         border: none;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(78, 115, 223, 0.08);
         background: #ffffff;
         width: 100%;
         max-width: 850px;
-        margin: auto;
     }
 
     .card-header-custom {
         background: var(--primary-gradient);
         color: white;
-        padding: 15px 25px;
-        border-radius: 15px 15px 0 0 !important;
+        padding: 18px 25px;
+        border-radius: 16px 16px 0 0 !important;
     }
 
     .form-label {
         font-weight: 700;
         color: #4e73df;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 5px;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+    }
+
+    .text-danger-star {
+        color: #e11d48;
+        font-weight: bold;
+        margin-left: 3px;
     }
 
     .input-group-text {
-        background-color: #f8f9fc;
-        border: 1.5px solid #e3e6f0;
+        background-color: #f8fafc;
+        border: 1.5px solid #e2e8f0;
         color: #4e73df;
+        padding: 8px 14px;
+    }
+
+    .is-invalid-custom {
+        border-color: #e11d48 !important;
+    }
+    .is-invalid-custom:focus {
+        box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
     }
 
     .form-control, .form-select {
         border-radius: 10px;
-        padding: 10px 12px;
-        border: 1.5px solid #e3e6f0;
+        padding: 10px 14px;
+        border: 1.5px solid #e2e8f0;
         font-size: 0.9rem;
+        transition: all 0.2s;
     }
 
     .form-control:focus, .form-select:focus {
         border-color: #4e73df;
-        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.1);
+        box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.1);
     }
 
-    /* Input Group Styling */
     .has-icon .input-left { border-radius: 10px 0 0 10px; border-right: none; }
-    .has-icon .form-control, .has-icon .form-select { border-left: none; border-radius: 0 10px 10px 0; }
+    .has-icon .form-control { border-left: none; border-radius: 0 10px 10px 0; }
     
-    .mb-compact { margin-bottom: 12px !important; }
+    .mb-compact { margin-bottom: 20px !important; }
+
+    .error-feedback {
+        color: #e11d48;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-top: 5px;
+        display: block;
+    }
 
     .btn-update {
         background: var(--primary-gradient);
         border: none;
         border-radius: 10px;
-        padding: 10px 30px;
+        padding: 10px 28px;
         font-weight: 600;
         transition: 0.3s;
     }
 
     .btn-update:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(78, 115, 223, 0.2);
+        box-shadow: 0 4px 12px rgba(78, 115, 223, 0.25);
     }
 
     .btn-back {
         background: #ffffff;
-        color: #858796;
+        color: #64748b;
         border-radius: 10px;
-        padding: 10px 25px;
+        padding: 10px 28px;
         font-weight: 600;
+        transition: 0.2s;
     }
 
-    @media (max-height: 720px) {
-        .mb-compact { margin-bottom: 8px !important; }
-        .card-header-custom { padding: 10px 25px; }
+    .btn-back:hover {
+        background: #f1f5f9;
+        color: #1e293b;
     }
 </style>
 
@@ -101,7 +122,7 @@
     <div class="card card-form">
         <div class="card-header-custom">
             <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i> Edit Jadwal Wisata</h5>
-            <p class="small mb-0 opacity-75 d-none d-sm-block">Perbarui informasi paket wisata: <strong>{{ $data->nama_wisata }}</strong></p>
+            <p class="small mb-0 opacity-75 d-none d-sm-block mt-1">Perbarui informasi paket wisata: <strong>{{ $data->nama_wisata }}</strong></p>
         </div>
         
         <div class="card-body p-4">
@@ -110,55 +131,83 @@
                 @method('PUT')
 
                 <div class="row">
+                    {{-- Nama Paket Wisata --}}
                     <div class="col-12 mb-compact">
-                        <label class="form-label">Nama Paket Wisata</label>
+                        <label class="form-label">Nama Paket Wisata<span class="text-danger-star">*</span></label>
                         <div class="input-group has-icon">
-                            <span class="input-group-text input-left"><i class="bi bi-map"></i></span>
-                            <input type="text" name="nama_wisata" class="form-control" 
-                                   value="{{ old('nama_wisata', $data->nama_wisata) }}" required>
+                            <span class="input-group-text input-left @error('nama_wisata') is-invalid-custom @enderror"><i class="bi bi-map"></i></span>
+                            <input type="text" name="nama_wisata" class="form-control @error('nama_wisata') is-invalid-custom @enderror" 
+                                   value="{{ old('nama_wisata', $data->nama_wisata) }}">
                         </div>
+                        @error('nama_wisata')
+                            <span class="error-feedback"><i class="bi bi-exclamation-circle me-1"></i> {{ $message }}</span>
+                        @enderror
                     </div>
 
-                    <div class="col-md-6 mb-compact">
-                        <label class="form-label">Lokasi Wisata</label>
+                    {{-- Lokasi Wisata --}}
+                    <div class="col-md-12 mb-compact">
+                        <label class="form-label">Lokasi Wisata<span class="text-danger-star">*</span></label>
                         <div class="input-group has-icon">
-                            <span class="input-group-text input-left">
-                                <i class="bi bi-geo-alt"></i>
-                            </span>
-                            <input type="text"
-                                name="lokasi_wisata"
-                                class="form-control"
-                                value="{{ old('lokasi_wisata', $data->lokasi_wisata) }}"
-                                placeholder="Contoh: Gunung Bromo, Jawa Timur"
-                                required>
+                            <span class="input-group-text input-left @error('lokasi_wisata') is-invalid-custom @enderror"><i class="bi bi-geo-alt"></i></span>
+                            <input type="text" name="lokasi_wisata" class="form-control @error('lokasi_wisata') is-invalid-custom @enderror" 
+                                   value="{{ old('lokasi_wisata', $data->lokasi_wisata) }}">
                         </div>
+                        @error('lokasi_wisata')
+                            <span class="error-feedback"><i class="bi bi-exclamation-circle me-1"></i> {{ $message }}</span>
+                        @enderror
                     </div>
 
-                    <div class="col-md-3 mb-compact">
-                        <label class="form-label">Tanggal</label>
-                        <input type="date" name="tanggal_wisata" class="form-control text-center" 
-                               value="{{ old('tanggal_wisata', $data->tanggal_wisata) }}" required>
+                    {{-- Tanggal --}}
+                    <div class="col-md-4 mb-compact">
+                        <label class="form-label">Tanggal Keberangkatan<span class="text-danger-star">*</span></label>
+                        <input type="date" name="tanggal_wisata" class="form-control @error('tanggal_wisata') is-invalid-custom @enderror" 
+                               value="{{ old('tanggal_wisata', $data->tanggal_wisata) }}">
+                        @error('tanggal_wisata')
+                            <span class="error-feedback"><i class="bi bi-exclamation-circle me-1"></i> {{ $message }}</span>
+                        @enderror
                     </div>
 
-                    <div class="col-md-3 mb-compact">
-                        <label class="form-label">Biaya (Rp)</label>
-                        <input type="number" name="biaya_wisata" class="form-control text-end" 
-                               value="{{ old('biaya_wisata', $data->biaya_wisata) }}" required>
+                    {{-- Biaya Wisata (Dengan Tampilan Titik) --}}
+                    <div class="col-md-4 mb-compact">
+                        <label class="form-label">Biaya / Harga Tiket (Rp)<span class="text-danger-star">*</span></label>
+                        <input type="text" id="biaya_tampilan" class="form-control fw-bold text-success @error('biaya_wisata') is-invalid-custom @enderror" placeholder="0">
+                        
+                        {{-- Input Hidden untuk Mengirim Angka Bersih Ke Laravel --}}
+                        <input type="hidden" id="biaya_asli" name="biaya_wisata" value="{{ old('biaya_wisata', $data->biaya_wisata) }}">
+                        
+                        @error('biaya_wisata')
+                            <span class="error-feedback"><i class="bi bi-exclamation-circle me-1"></i> {{ $message }}</span>
+                        @enderror
                     </div>
 
+                    {{-- Kuota --}}
+                    <div class="col-md-4 mb-compact">
+                        <label class="form-label">Maksimal Kuota (Orang)<span class="text-danger-star">*</span></label>
+                        <input type="number" name="kuota" class="form-control @error('kuota') is-invalid-custom @enderror" 
+                               value="{{ old('kuota', $data->kuota) }}" min="1">
+                        @error('kuota')
+                            <span class="error-feedback"><i class="bi bi-exclamation-circle me-1"></i> {{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    {{-- Keterangan / Deskripsi --}}
                     <div class="col-12 mb-3">
-                        <label class="form-label">Keterangan / Deskripsi</label>
-                        <textarea name="keterangan_wisata" class="form-control" rows="3" 
+                        <label class="form-label">Deskripsi & Fasilitas Perjalanan</label>
+                        <textarea name="keterangan_wisata" class="form-control @error('keterangan_wisata') is-invalid-custom @enderror" rows="3" 
                                   placeholder="Masukkan detail perubahan paket...">{{ old('keterangan_wisata', $data->keterangan_wisata) }}</textarea>
+                        @error('keterangan_wisata')
+                            <span class="error-feedback"><i class="bi bi-exclamation-circle me-1"></i> {{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
+                {{-- Group Tombol Aksi --}}
                 <div class="d-flex justify-content-between border-top pt-3 mt-2">
                     <a href="{{ route('admin.jwisata.index') }}" class="btn btn-back border">
-                        <i class="bi bi-arrow-left me-1"></i> Kembali
+                        <i class="bi bi-arrow-left me-1"></i> Batal
                     </a>
                     <button type="submit" class="btn btn-primary btn-update text-white shadow-sm">
-                        <i class="bi bi-save me-1"></i> Simpan Perubahan
+                        <i class="bi bi-cloud-arrow-up me-1"></i> Simpan Perubahan
                     </button>
                 </div>
             </form>
@@ -166,25 +215,63 @@
     </div>
 </div>
 
-{{-- SweetAlert Scripts --}}
+{{-- SweetAlert & Logic Masking Scripts --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    const biayaTampilan = document.getElementById('biaya_tampilan');
+    const biayaAsli = document.getElementById('biaya_asli');
+    
+    // 1. Format Ketikan Admin Secara Real-Time saat Mengetik
+    biayaTampilan.addEventListener('input', function(e) {
+        let nilaiBersih = this.value.replace(/[^\d]/g, ''); 
+        biayaAsli.value = nilaiBersih; 
+        this.value = formatRupiah(nilaiBersih);
+    });
+
+    // 2. Fungsi Mengubah Angka Menjadi Format Ribuan Ber-titik (Aman dari pecahan desimal .00)
+    function formatRupiah(angka) {
+        if (!angka) return '';
+        
+        // Memastikan angka dipotong sebelum desimal database (.00) lalu dibersihkan total
+        let angkaString = angka.toString().split('.')[0];
+        let number_string = angkaString.replace(/[^\d]/g, '');
+        
+        let sisa   = number_string.length % 3,
+            rupiah = number_string.substr(0, sisa),
+            ribuan = number_string.substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+        return rupiah;
+    }
+
+    // 3. Eksekusi Pertama Kali Saat Halaman Edit Di-load (Pembersihan Sempurna)
+    if (biayaAsli.value) {
+        // Pasang tampilan visual ber-titik (Contoh: 200.000)
+        biayaTampilan.value = formatRupiah(biayaAsli.value);
+        
+        // Paksa nilai hidden input sinkron hanya menyimpan angka murni (Contoh: 200000)
+        biayaAsli.value = biayaAsli.value.toString().split('.')[0].replace(/[^\d]/g, '');
+    }
+
+    // --- POPUP NOTIFIKASI SWEETALERT ---
     @if(session('success'))
     Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
         text: "{{ session('success') }}",
         timer: 2000,
-        showConfirmButton: false,
-        customClass: { popup: 'rounded-15' }
+        showConfirmButton: false
     });
     @endif
 
     @if ($errors->any())
     Swal.fire({
         icon: 'error',
-        title: 'Terjadi Kesalahan',
-        html: '{!! implode("<br>", $errors->all()) !!}',
+        title: 'Validasi Gagal',
+        text: 'Mohon periksa kembali kolom inputan yang ditandai merah.',
         confirmButtonColor: '#4e73df',
     });
     @endif

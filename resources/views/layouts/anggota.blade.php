@@ -12,7 +12,18 @@
     :root {
         --sidebar-bg: #2b59c3;
         --sidebar-hover: rgba(255, 255, 255, 0.1); 
-        --text-muted: rgba(255, 255, 255, 0.6);
+        /* Ubah text-muted agar sedikit lebih terang dan jelas */
+        --text-muted: rgba(255, 255, 255, 0.7); 
+    }
+
+    .nav-label {
+        font-size: 0.7rem; /* Sedikit lebih besar agar terbaca */
+        text-transform: uppercase;
+        color: white; /* Ubah ke putih solid */
+        opacity: 0.5; /* Gunakan opacity untuk kesan muted yang elegan */
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        margin: 20px 12px 10px;
     }
 
     body {
@@ -52,22 +63,13 @@
         text-align: center;
     }
 
-    .nav-label {
-        font-size: 0.65rem; 
-        text-transform: uppercase;
-        color: var(--text-muted);
-        font-weight: 700;
-        letter-spacing: 1px;
-        margin: 15px 12px 8px;
-    }
-
     .sidebar a {
         display: flex;
         align-items: center;
         padding: 10px 14px; 
         margin-bottom: 4px;
         text-decoration: none;
-        color: rgba(255, 255, 255, 0.8); 
+        color: rgba(255, 255, 255, 0.85); 
         border-radius: 10px;
         transition: all 0.2s ease;
         font-size: 0.8rem; 
@@ -353,32 +355,33 @@
         </div>
         <div class="nav-label">Anggota Menu</div>
         <a href="{{ route('anggota.dashboard') }}" 
-           class="{{ request()->routeIs('anggota.dashboard') ? 'active' : '' }}">
+            class="{{ request()->routeIs('anggota.dashboard') ? 'active' : '' }}">
             <i class="bi bi-house-door-fill"></i> 
             <span>Dashboard</span>
         </a>
 
         <a href="{{ route('anggota.jsenam.index') }}" 
-        class="{{ request()->routeIs('anggota.jsenam.*') ? 'active' : '' }}">
+            class="{{ request()->routeIs('anggota.jsenam.*') ? 'active' : '' }}">
             <i class="bi bi-calendar-check-fill"></i> 
             <span>Jadwal Senam</span>
         </a>
 
-        <a href="#" class="disabled">
-            <i class="bi bi-check2-square"></i> 
-            <span>Voting Wisata</span>
+        <a href="{{ route('anggota.vote-wisata.index') }}"
+        class="{{ request()->routeIs('anggota.vote-wisata.*') ? 'active' : '' }}">
+            <i class="bi bi-patch-check-fill"></i>
+            <span>Vote Wisata</span>
         </a>
 
         <a href="{{ route('anggota.dafwisata.index') }}" 
-           class="{{ request()->routeIs('anggota.dafwisata.*') ? 'active' : '' }}">
+            class="{{ request()->routeIs('anggota.dafwisata.*') ? 'active' : '' }}">
             <i class="bi bi-map-fill"></i> 
             <span>Daftar Wisata</span>
         </a>
 
-        <a href="{{ route('anggota.iuran.index') }}"
-        class="{{ request()->routeIs('anggota.iuran.*') ? 'active' : '' }}">
-            <i class="bi bi-wallet-fill"></i> 
-            <span>Pembayaran Iuran</span>
+        <a href="{{ route('anggota.pembayaran-wisata.index') }}"
+        class="{{ request()->routeIs('anggota.pembayaran-wisata.*') ? 'active' : '' }}">
+            <i class="bi bi-wallet-fill"></i>
+            <span>Pembayaran Wisata</span>
         </a>
 
         <div class="sidebar-footer">
@@ -428,7 +431,7 @@
                     <i class="bi bi-exclamation-triangle-fill" style="font-size: 2.5rem;"></i>
                 </div>
                 <h6 class="fw-bold mb-1">Konfirmasi Logout</h6>
-                <p class="text-muted" style="font-size: 0.75rem;">Apakah anda yakin ingin mengakhiri sesi ini?</p>
+                <p class="text-muted" style="font-size: 0.75rem;">Apakah anda yakin ingin keluar?</p>
 
                 <div class="d-grid gap-2 mt-4">
                     <form action="{{ route('logout') }}" method="POST" class="d-grid">

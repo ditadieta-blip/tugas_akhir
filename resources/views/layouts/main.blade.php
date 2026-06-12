@@ -31,6 +31,9 @@
         display: flex;
         flex-direction: column;
         z-index: 1000;
+        height: 100vh;
+        overflow-y: auto; 
+        transition: all 0.3s ease;
         box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
     }
 
@@ -103,38 +106,47 @@
     }
 
     .btn-logout {
-        color: #ffcbd1 !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    .btn-logout:hover {
+        color: white !important;
     }
 
-    /* ===== HEADER BARU (FIXED & SERASI) ===== */
+    /* ===== HEADER FIXED ===== */
     .topbar {
         position: fixed;
         top: 0;
         left: 240px;
         width: calc(100% - 240px);
-        height: 65px; /* Sedikit lebih tinggi agar elegan */
-        background: #ffffff; /* Ganti ke putih */
+        height: 65px; 
+        background: #ffffff; 
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 30px;
         z-index: 999;
-        /* Shadow yang lebih halus agar tidak 'mati' */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         border-bottom: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
     }
 
     .topbar-left {
         display: flex;
         align-items: center;
         gap: 12px;
-        color: #334155; /* Warna teks gelap yang elegan */
+        color: #334155; 
         font-weight: 600;
     }
 
     .menu-toggle {
-        font-size: 1.4rem;
+        display: none; /* Sembunyikan default di desktop */
+        font-size: 1.5rem;
         cursor: pointer;
+        padding: 4px 8px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        color: #334155;
     }
 
     .topbar-title {
@@ -146,7 +158,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        color: #334155; /* Teks user jadi gelap agar terbaca di background putih */
+        color: #334155; 
     }
 
     .profile-topbar span {
@@ -157,7 +169,7 @@
     .profile-topbar .profile-img {
         width: 38px;
         height: 38px;
-        border-radius: 10px; /* Bentuk squircle lebih modern */
+        border-radius: 10px; 
         background: #f1f5f9;
         color: #2b59c3;
         display: flex;
@@ -166,168 +178,162 @@
         font-weight: 700;
         border: 1px solid #e2e8f0;
     }
-/* ===== MODAL MODERN STYLE ===== */
-.modal-content {
-    border-radius: 28px;
-    border: none;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-}
 
-.modal-header-custom {
-    padding: 20px 30px;
-    border-bottom: 1px solid #f1f5f9;
-}
+    /* ===== MODAL MODERN STYLE ===== */
+    .modal-content {
+        border-radius: 28px;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
 
-.modal-body {
-    padding: 30px !important;
-}
+    .modal-header-custom {
+        padding: 20px 30px;
+        border-bottom: 1px solid #f1f5f9;
+    }
 
-/* Avatar Wrapper di Modal */
-.avatar-upload-wrapper {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    margin: 0 auto;
-}
+    .modal-body {
+        padding: 30px !important;
+    }
 
-.profile-avatar-modal {
-    width: 100%;
-    height: 100%;
-    border-radius: 40px; /* Bentuk squircle modern */
-    background: #f8fafc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 48px;
-    font-weight: 700;
-    color: #2b59c3;
-    border: 4px solid #fff;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-    object-fit: cover;
-}
+    .avatar-upload-wrapper {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto;
+    }
 
-.btn-camera-float {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background: #2b59c3;
-    color: white;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+    .profile-avatar-modal {
+        width: 100%;
+        height: 100%;
+        border-radius: 40px; 
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 700;
+        color: #2b59c3;
+        border: 4px solid #fff;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        object-fit: cover;
+    }
 
-.btn-camera-float:hover {
-    background: #1e44a3;
-    transform: scale(1.1);
-}
+    .btn-camera-float {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #2b59c3;
+        color: white;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
-/* Form Styling inside Modal */
-.modal .form-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #94a3b8;
-    margin-bottom: 8px;
-}
+    .btn-camera-float:hover {
+        background: #1e44a3;
+        transform: scale(1.1);
+    }
 
-.modal .form-control {
-    border-radius: 14px;
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    background-color: #f8fafc;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
+    .modal .form-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94a3b8;
+        margin-bottom: 8px;
+    }
 
-.modal .form-control:focus {
-    background-color: #fff;
-    border-color: #2b59c3;
-    box-shadow: 0 0 0 4px rgba(43, 89, 195, 0.1);
-}
+    .modal .form-control {
+        border-radius: 14px;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
 
-/* Error Handling Style */
-.invalid-feedback {
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin-left: 5px;
-}
+    .modal .form-control:focus {
+        background-color: #fff;
+        border-color: #2b59c3;
+        box-shadow: 0 0 0 4px rgba(43, 89, 195, 0.1);
+    }
 
-/* Button Group */
-.modal-footer-custom {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-}
+    .invalid-feedback {
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-left: 5px;
+    }
 
-.btn-save-modal {
-    background: #2b59c3;
-    color: white;
-    border: none;
-    border-radius: 14px;
-    padding: 12px;
-    font-weight: 600;
-    flex: 2;
-}
+    .modal-footer-custom {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+    }
 
-.btn-cancel-modal {
-    background: #f1f5f9;
-    color: #64748b;
-    border: none;
-    border-radius: 14px;
-    padding: 12px;
-    font-weight: 600;
-    flex: 1;
-}
-/* ===== EFEK INTERAKTIF BUTTON ===== */
-.btn-save-modal, .btn-cancel-modal, .btn-primary, .btn-logout {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
+    .btn-save-modal {
+        background: #2b59c3;
+        color: white;
+        border: none;
+        border-radius: 14px;
+        padding: 12px;
+        font-weight: 600;
+        flex: 2;
+    }
 
-/* Efek saat kursor di atas tombol Simpan */
-.btn-save-modal:hover {
-    background: #1e44a3; /* Warna sedikit lebih gelap */
-    transform: translateY(-2px); /* Tombol naik sedikit */
-    box-shadow: 0 8px 15px rgba(43, 89, 195, 0.3); /* Bayangan lebih tegas */
-    letter-spacing: 0.5px; /* Teks agak merenggang sedikit */
-}
+    .btn-cancel-modal {
+        background: #f1f5f9;
+        color: #64748b;
+        border: none;
+        border-radius: 14px;
+        padding: 12px;
+        font-weight: 600;
+        flex: 1;
+    }
 
-/* Efek saat tombol diklik (Active) */
-.btn-save-modal:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 6px rgba(43, 89, 195, 0.2);
-}
+    /* ===== EFEK INTERAKTIF BUTTON ===== */
+    .btn-save-modal, .btn-cancel-modal, .btn-primary, .btn-logout {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
 
-/* Efek tombol Batal */
-.btn-cancel-modal:hover {
-    background: #e2e8f0;
-    color: #334155;
-    transform: translateY(-2px);
-}
+    .btn-save-modal:hover {
+        background: #1e44a3; 
+        transform: translateY(-2px); 
+        box-shadow: 0 8px 15px rgba(43, 89, 195, 0.3); 
+        letter-spacing: 0.5px; 
+    }
 
-/* Sidebar Link Hover Effect */
-.sidebar a:hover {
-    background: var(--sidebar-hover);
-    color: white;
-    padding-left: 20px; /* Geser teks sedikit ke kanan */
-}
+    .btn-save-modal:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px rgba(43, 89, 195, 0.2);
+    }
 
+    .btn-cancel-modal:hover {
+        background: #e2e8f0;
+        color: #334155;
+        transform: translateY(-2px);
+    }
+
+    .sidebar a:hover {
+        background: var(--sidebar-hover);
+        color: white;
+        padding-left: 20px; 
+    }
 
     /* ===== CONTENT ===== */
     .main-content {
         margin-left: 240px;
         width: calc(100% - 240px);
-        padding: 80px 25px 25px; /* supaya tidak ketiban header */
+        padding: 80px 25px 25px; 
+        transition: all 0.3s ease;
     }
 
     .content-card {
@@ -337,21 +343,64 @@
         min-height: 85vh;
     }
 
+    .collapse .bg-light {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        margin: 0 10px !important;
+        border-radius: 12px !important;
+    }
+
+    .dropdown-item {
+        color: rgba(255, 255, 255, 0.7) !important;
+        padding: 8px 20px !important;
+        border-radius: 8px;
+    }
+
+    .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+
+    .nav-link-collapse[aria-expanded="true"] .bi-chevron-down {
+        transform: rotate(180deg);
+    }
+    .bi-chevron-down {
+        transition: transform 0.3s ease;
+    }
+
+    /* ===== PERBAIKAN RESPONSIVE SIDEBAR (MOBILE) ===== */
     @media (max-width: 768px) {
-        .sidebar { margin-left: -240px; }
-        .main-content { margin-left: 0; width: 100%; }
-        .topbar { left: 0; width: 100%; }
+        .sidebar {
+            left: -240px; /* Sembunyikan sidebar ke kiri luar layar HP */
+        }
+        .sidebar.active {
+            left: 0; /* Munculkan kembali saat toggle diklik */
+        }
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+        .topbar {
+            left: 0 !important;
+            width: 100% !important;
+            padding: 0 20px;
+        }
+        .menu-toggle {
+            display: block !important; /* Tampilkan tombol hamburger hanya di layar HP */
+        }
     }
 </style>
 </head>
 <body>
 
 <div class="d-flex">
-    <div class="sidebar">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
         <div class="brand-section text-center">
             <h5 class="brand-name text-uppercase">SIS BSC</h5>
         </div>
+        
         <div class="nav-label">Admin Menu</div>
+        
         <a href="{{ route('admin.dashboard') }}"
            class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <i class="bi bi-house-door-fill"></i>
@@ -362,6 +411,12 @@
            class="{{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
             <i class="bi bi-people-fill"></i>
             <span>Kelola Pengguna</span>
+        </a>
+
+        <a href="{{ route('admin.voting-wisata.index') }}"
+        class="{{ request()->routeIs('admin.voting-wisata.*') ? 'active' : '' }}">
+            <i class="bi bi-patch-check-fill"></i>
+            <span>Kelola Voting Wisata</span>
         </a>
 
         <a href="{{ route('admin.jwisata.index') }}"
@@ -375,24 +430,53 @@
             <i class="bi bi-clipboard-check-fill"></i>
             <span>Pendaftar Wisata</span>
         </a>
-
-        <a href="{{ route('admin.voting.index') }}"
-        class="{{ request()->routeIs('admin.voting.*') ? 'active' : '' }}">
-            <i class="bi bi-patch-check-fill"></i>
-            <span>Kelola Voting</span>
-        </a>
-
-        <a href="#" class="disabled">
+        <a href="{{ route('admin.transaksi.index') }}"
+        class="{{ request()->routeIs('admin.transaksi.*') || request()->routeIs('admin.wisata.*') || request()->routeIs('admin.tunai.*') ? 'active' : '' }}">
             <i class="bi bi-credit-card-fill"></i>
-            <span>Pembayaran</span>
+            <span>Transaksi Pembayaran</span>
         </a>
 
-        <a href="#" class="disabled">
-            <i class="bi bi-bar-chart-line-fill"></i>
-            <span>Laporan Keuangan</span>
-        </a>
+        <!-- MENU LAPORAN -->
+        <div class="nav-item">
+            <a href="#collapseLaporan" 
+            class="nav-link-collapse d-flex align-items-center justify-content-between {{ request()->is('admin/laporan*') ? 'active' : '' }}" 
+            data-bs-toggle="collapse" 
+            role="button" 
+            aria-expanded="{{ request()->is('admin/laporan*') ? 'true' : 'false' }}">
 
-        <div class="sidebar-footer">
+                <div>
+                    <i class="bi bi-bar-chart-line-fill"></i>
+                    <span>Laporan</span>
+                </div>
+
+                <i class="bi bi-chevron-down small"></i>
+            </a>
+
+            <div id="collapseLaporan" class="collapse {{ request()->is('admin/laporan*') ? 'show' : '' }}">
+                <div class="py-2">
+                    {{-- PEMASUKAN --}}
+                    <a class="dropdown-item small {{ request()->routeIs('admin.laporan.keuangan') ? 'text-white fw-bold' : '' }}" 
+                    href="{{ route('admin.laporan.keuangan') }}">
+                        Pemasukan
+                    </a>
+
+                    {{-- KEAKTIFAN --}}
+                    <a class="dropdown-item small {{ request()->routeIs('admin.laporan.keaktifan') ? 'text-white fw-bold' : '' }}" 
+                    href="{{ route('admin.laporan.keaktifan') }}">
+                        Keaktifan Anggota
+                    </a>
+
+                    {{-- TAGIHAN --}}
+                    <a class="dropdown-item small {{ request()->routeIs('admin.laporan.tagihan') ? 'text-white fw-bold' : '' }}" 
+                    href="{{ route('admin.laporan.tagihan') }}">
+                        Tagihan Iuran
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER LOGOUT -->
+        <div class="sidebar-footer mt-auto mb-4">
             <a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" class="btn-logout">
                 <i class="bi bi-box-arrow-right"></i> 
                 <span>Logout</span>
@@ -400,26 +484,23 @@
         </div>
     </div>
 
+    <!-- MAIN CONTENT AREA -->
     <main class="main-content">
-
-        <!-- HEADER BARU -->
+        <!-- TOPBAR -->
         <div class="topbar">
             <div class="topbar-left">
+                <!-- Hamburger menu aktif otomatis di mobile -->
+                <i class="bi bi-list menu-toggle" id="toggleMenu"></i>
             </div>
 
             <div class="profile-topbar">
                 <span>Hi, {{ auth()->user()->nama_user }}</span>
-                <div class="profile-img" 
-                    data-bs-toggle="modal" data-bs-target="#modalProfil"
-                    style="cursor:pointer; overflow:hidden;">
-
-                @if(auth()->user()->foto)
-                    <img src="{{ asset('storage/foto/' . auth()->user()->foto) }}" 
-                        style="width:38px; height:38px; border-radius:10px; object-fit:cover;">
-                @else
-                    {{ strtoupper(substr(auth()->user()->nama_user, 0, 1)) }}
-                @endif
-
+                <div class="profile-img" data-bs-toggle="modal" data-bs-target="#modalProfil" style="cursor:pointer; overflow:hidden;">
+                    @if(auth()->user()->foto)
+                        <img src="{{ asset('storage/foto/' . auth()->user()->foto) }}" style="width:38px; height:38px; border-radius:10px; object-fit:cover;">
+                    @else
+                        {{ strtoupper(substr(auth()->user()->nama_user, 0, 1)) }}
+                    @endif
                 </div>
             </div>
         </div>
@@ -430,7 +511,7 @@
     </main>
 </div>
 
-<!-- MODAL LOGOUT TETAP -->
+<!-- MODAL LOGOUT -->
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg" style="max-width: 320px; margin: auto; border-radius: 16px; border:none;">
@@ -457,9 +538,9 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Preview Foto dengan transisi mulus
     function previewFoto(event) {
         const file = event.target.files[0];
         if (file) {
@@ -471,7 +552,6 @@
                 if (previewImg) {
                     previewImg.src = e.target.result;
                 } else if (placeholder) {
-                    // Jika sebelumnya tidak ada foto, ganti placeholder dengan img
                     const newImg = document.createElement('img');
                     newImg.id = 'preview-avatar';
                     newImg.className = 'profile-avatar-modal';
@@ -483,16 +563,14 @@
         }
     }
 
-    // Tampilkan modal secara otomatis jika ada error validasi setelah reload
-    // LOGIKA MODAL TETAP TERBUKA
     document.addEventListener('DOMContentLoaded', function () {
-        // Cek apakah ada error validasi ATAU ada pesan sukses di session
-        @if ($errors->any() || session('success_profil'))
+        @if ($errors->profil->any() || session('success_profil'))
             var myModal = new bootstrap.Modal(document.getElementById('modalProfil'));
             myModal.show();
         @endif
     });
 </script>
+
 <div class="modal fade" id="modalProfil" tabindex="-1" aria-labelledby="modalProfilLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -536,45 +614,58 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Nama Lengkap</label>
-                                    <input type="text" name="nama_user" class="form-control @error('nama_user') is-invalid @enderror"
+                                    <input type="text" name="nama_user" class="form-control @error('nama_user', 'profil') is-invalid @enderror"
                                            value="{{ old('nama_user', auth()->user()->nama_user) }}" required>
-                                    @error('nama_user')
+                                    @error('nama_user', 'profil')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Email</label>
-                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                                    <input type="email" name="email" class="form-control @error('email', 'profil') is-invalid @enderror"
                                            value="{{ old('email', auth()->user()->email) }}" required>
-                                    @error('email')
+                                    @error('email', 'profil')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Nomor WhatsApp</label>
-                                    <input type="text" name="no_hp" class="form-control @error('no_hp') is-invalid @enderror"
+                                    <input type="text" name="no_hp" class="form-control @error('no_hp', 'profil') is-invalid @enderror"
                                            value="{{ old('no_hp', auth()->user()->no_hp) }}" placeholder="08xxxx">
-                                    @error('no_hp')
+                                    @error('no_hp', 'profil')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Alamat</label>
-                                    <input type="text" name="alamat" class="form-control"
-                                           value="{{ old('alamat', auth()->user()->alamat) }}">
+                                    <input type="text" name="alamat" class="form-control @error('alamat', 'profil') is-invalid @enderror"
+                                        value="{{ old('alamat', auth()->user()->alamat) }}">
+                                    @error('alamat', 'profil')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
 
                                 <div class="col-12">
                                     <hr class="my-2 opacity-50">
                                     <label class="form-label">Ganti Password (Opsional)</label>
-                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                                           placeholder="Masukkan password baru jika ingin diubah">
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="input-group">
+                                        <input type="password" name="password" id="password"
+                                            class="form-control @error('password', 'profil') is-invalid @enderror"
+                                            placeholder="Masukkan password baru jika ingin diubah">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="lihatPassword()">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        @error('password', 'profil')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
@@ -591,5 +682,31 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Logic Toggle Sidebar Mobile
+    document.getElementById('toggleMenu').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('active');
+    });
+
+    // Menutup sidebar jika klik di luar area sidebar saat mobile
+    document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleMenu');
+        if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target) && window.innerWidth <= 768) {
+            sidebar.classList.remove('active');
+        }
+    });
+</script>
+<script>
+function lihatPassword() {
+    let input = document.getElementById("password");
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
 </body>
 </html>

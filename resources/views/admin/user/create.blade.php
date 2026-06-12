@@ -129,7 +129,7 @@
                     </div>
 
                     <div class="col-md-6 mb-compact">
-                        <label class="form-label">Role Akses</label>
+                        <label class="form-label">Role</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
                             <select name="id_role" class="form-select @error('id_role') is-invalid @enderror" required>

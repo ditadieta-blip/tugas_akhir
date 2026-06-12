@@ -3,60 +3,76 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\JWisata;
 use App\Models\PendaftaranWisata;
 use Illuminate\Http\Request;
 
 class PendaftaranController extends Controller
 {
     /**
-     * Tampilkan daftar pendaftar wisata dengan search dan pagination.
+     * Daftar wisata yang memiliki pendaftar
      */
     public function index(Request $request)
     {
-        $query = PendaftaranWisata::with(['user', 'jwisata']);
+        $query = JWisata::withCount('pendaftaran');
 
-        // Search berdasarkan nama user atau nama wisata
         if ($request->search) {
-            $query->whereHas('user', function($q) use ($request){
-                $q->where('nama_user', 'like', '%'.$request->search.'%');
-            })->orWhereHas('jwisata', function($q) use ($request){
-                $q->where('nama_wisata', 'like', '%'.$request->search.'%');
-            });
+            $query->where('nama_wisata', 'like', '%' . $request->search . '%');
         }
 
-        // Pagination 7 per halaman, urut terbaru
-        $pendaftaran = $query->orderBy('created_at', 'desc')->paginate(5);
+        $wisata = $query->orderBy('created_at', 'desc')->paginate(5);
 
-        return view('admin.pendaftaran.index', compact('pendaftaran'));
+        return view('admin.pendaftaran.index', compact('wisata'));
     }
 
     /**
-     * Update status pendaftaran (diterima / ditolak)
+     * Detail peserta wisata
      */
-    public function updateStatus(Request $request, $id)
+    public function show(Request $request, $id)
     {
-        $request->validate([
-            'status_daftar' => 'required|in:diterima,ditolak'
-        ]);
+        $wisata = JWisata::findOrFail($id);
 
-        $pendaftaran = PendaftaranWisata::findOrFail($id);
+        $query = PendaftaranWisata::with(['user', 'jwisata'])
+            ->where('id_wisata', $id);
 
-        $pendaftaran->update([
-            'status_daftar' => $request->status_daftar
-        ]);
+        if ($request->search) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('nama_user', 'like', '%' . $request->search . '%');
+            });
+        }
 
-        return redirect()->back()->with('success', 'Status pendaftaran berhasil diperbarui.');
+        $pendaftaran = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+
+        return view('admin.pendaftaran.show', compact(
+            'pendaftaran',
+            'wisata'
+        ));
     }
 
+    /**
+     * Hapus data pendaftaran
+     */
     public function destroy($id)
     {
         try {
+
             $pendaftaran = PendaftaranWisata::findOrFail($id);
+
             $pendaftaran->delete();
 
-            return redirect()->back()->with('success', 'Data pendaftaran berhasil dihapus.');
+            return back()->with(
+                'success',
+                'Data pendaftaran berhasil dihapus.'
+            );
+
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+
+            return back()->with(
+                'error',
+                'Gagal menghapus data: ' . $e->getMessage()
+            );
         }
     }
 }

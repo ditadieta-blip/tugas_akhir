@@ -26,4 +26,10 @@ class PendaftaranWisata extends Model
     {
         return $this->belongsTo(JWisata::class, 'id_wisata', 'id_wisata');
     }
+
+    public function pembayaranWisata()
+    {
+        return $this->hasMany(PembayaranWisata::class, 'id_daftar_wisata', 'id_daftar_wisata');
+    }
+
 }

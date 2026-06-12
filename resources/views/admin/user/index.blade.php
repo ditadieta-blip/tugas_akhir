@@ -128,17 +128,30 @@
             <p class="text-muted small mb-0">Manajemen data user dan hak akses sistem</p>
         </div>
         
-        <div class="d-flex gap-3">
-            <div class="search-box d-none d-md-block" style="width: 280px;">
-                <form action="{{ route('admin.user.index') }}" method="GET">
+        <div class="d-flex gap-3 align-items-center">
+            <form action="{{ route('admin.user.index') }}" method="GET" class="d-flex gap-2">
+                
+                <div style="width: 160px;">
+                    <select name="role" class="form-select shadow-sm" style="border-radius: 10px; height: 42px; border: 1.5px solid #e3e6f0; font-size: 0.9rem;" onchange="this.form.submit()">
+                        <option value="">-- Semua Role --</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id_role }}" {{ request('role') == $role->id_role ? 'selected' : '' }}>
+                                {{ ucfirst($role->nama_role) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="search-box d-none d-md-block" style="width: 250px;">
                     <i class="bi bi-search"></i>
                     <input type="text" name="search" class="form-control search-input shadow-sm" 
                            placeholder="Cari nama atau email..." value="{{ request('search') }}">
-                </form>
-            </div>
+                </div>
+                
+            </form>
 
             <a href="{{ route('admin.user.create') }}" class="btn btn-primary d-flex align-items-center shadow-sm" 
-               style="border-radius: 10px; background: var(--primary-gradient); border: none; padding: 0 20px;">
+               style="border-radius: 10px; background: var(--primary-gradient); border: none; padding: 0 20px; height: 42px;">
                 <i class="bi bi-person-plus-fill me-2"></i> Tambah User
             </a>
         </div>
@@ -218,7 +231,57 @@
                 dari <span class="text-primary">{{ $users->total() }}</span> user
             </div>
             <nav>
-                {{ $users->onEachSide(1)->links('pagination::bootstrap-5') }}
+                <ul class="pagination pagination-sm mb-0">
+
+                    {{-- PREVIOUS --}}
+                    @if ($users->onFirstPage())
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="bi bi-chevron-left"></i>
+                            </span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $users->previousPageUrl() }}">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- NOMOR HALAMAN --}}
+                    @php
+                        $start = max($users->currentPage() - 1, 1);
+                        $end = min($start + 2, $users->lastPage());
+
+                        if (($end - $start) < 2) {
+                            $start = max($end - 2, 1);
+                        }
+                    @endphp
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        <li class="page-item {{ $users->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $users->url($i) }}">
+                                {{ $i }}
+                            </a>
+                        </li>
+                    @endfor
+
+                    {{-- NEXT --}}
+                    @if ($users->hasMorePages())
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $users->nextPageUrl() }}">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    @else
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="bi bi-chevron-right"></i>
+                            </span>
+                        </li>
+                    @endif
+
+                </ul>
             </nav>
         </div>
     </div>
@@ -228,7 +291,7 @@
     function confirmDelete(id) {
         Swal.fire({
             title: 'Hapus Pengguna?',
-            text: "User ini akan dihapus secara permanen dari sistem!",
+            text: "Pengguna ini akan dihapus secara permanen dari sistem!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#4e73df', 

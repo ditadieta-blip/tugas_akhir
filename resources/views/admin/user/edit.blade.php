@@ -180,7 +180,7 @@
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </a>
                     <button type="submit" class="btn btn-primary btn-update text-white shadow-sm">
-                        <i class="bi bi-save me-1"></i> Simpan Perubahan
+                         Simpan Perubahan
                     </button>
                 </div>
             </form>

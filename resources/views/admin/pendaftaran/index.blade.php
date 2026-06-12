@@ -4,197 +4,266 @@
 <style>
     :root {
         --primary-gradient: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        --primary-color: #4e73df;
+        --dark-navy: #2d336b;
     }
 
     .main-container {
-        padding: 20px;
+        padding: 20px 15px;
         background-color: #f8f9fc;
         min-height: 100vh;
     }
 
     .page-title {
         font-weight: 800;
-        color: #2e59d9;
+        color: var(--dark-navy);
+        font-size: 1.4rem;
         letter-spacing: -0.5px;
     }
 
     .card-modern {
         background: #ffffff;
         border: none;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(45, 51, 107, 0.05);
+        padding: 24px;
+        border: 1px solid rgba(226, 232, 240, 0.6);
     }
 
-    /* Tabel Custom */
-    .table-custom thead th {
-        background: #f8f9fc;
-        border: none;
-        color: #4e73df;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        padding: 15px;
-    }
-
-    .table-custom tbody td {
-        padding: 15px;
-        vertical-align: middle;
-        color: #5a5c69;
-        border-bottom: 1px solid #f1f3f9;
-    }
-
-    /* Status Badges */
-    .badge-status {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-    }
-
+    /* Search Box Kapsul Modern */
     .search-box {
         position: relative;
-        max-width: 300px;
+        width: 100%;
+    }
+
+    @media (min-width: 768px) {
+        .search-box {
+            max-width: 300px;
+        }
     }
 
     .search-box i {
         position: absolute;
-        left: 15px;
+        left: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: #b7b9cc;
+        color: #94a3b8;
+        font-size: 0.9rem;
     }
 
     .search-input {
-        border-radius: 10px;
-        padding-left: 40px;
-        border: 1.5px solid #e3e6f0;
+        border-radius: 30px;
+        padding: 10px 16px 10px 44px;
+        border: 1px solid #e2e8f0;
+        height: 42px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.25s ease-in-out;
+        background-color: #ffffff;
     }
 
-    /* Button Styles */
-    .btn-approve { background: #e8f5e9; color: #2e7d32; border: none; transition: 0.3s; }
-    .btn-reject { background: #fff5f5; color: #e53e3e; border: none; transition: 0.3s; }
-    .btn-delete { background: #f1f3f9; color: #6e707e; border: none; transition: 0.3s; }
-    
-    .btn-approve:hover { background: #2e7d32; color: #fff; transform: translateY(-2px); }
-    .btn-reject:hover { background: #e53e3e; color: #fff; transform: translateY(-2px); }
-    .btn-delete:hover { background: #3a3b45; color: #fff; transform: translateY(-2px); }
+    .search-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.12);
+        outline: none;
+        background-color: #fff;
+    }
 
-    /* Custom Pagination Styling */
-    .pagination { margin-bottom: 0; gap: 5px; }
-    .page-item .page-link {
+    /* Table Custom Styling */
+    .table-custom {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table-custom thead th {
+        background: #f8fafc;
         border: none;
-        border-radius: 8px !important;
-        color: #4e73df;
-        font-weight: 600;
-        padding: 8px 14px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        color: #64748b;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        padding: 14px 16px;
+        letter-spacing: 0.75px;
     }
-    .page-item.active .page-link {
-        background: var(--primary-gradient) !important;
+
+    .table-custom thead th:first-child {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .table-custom thead th:last-child {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .table-custom tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .table-custom tbody td {
+        padding: 16px;
+        vertical-align: middle;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
+    }
+
+    /* Badge Jumlah Pendaftar */
+    .count-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        background: #eef2ff;
+        color: #4e73df;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(78, 115, 223, 0.1);
+    }
+
+    /* Tombol Aksi */
+    .btn-action-view {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: all 0.2s ease-in-out;
+        border: none;
+        background: #f1f5f9;
+        color: #475569;
+        text-decoration: none;
+    }
+
+    .btn-action-view:hover {
+        background: var(--primary-gradient);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(78, 115, 223, 0.25);
+    }
+
+    /* Kustomisasi Icon Destinasi */
+    .icon-destination-box {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(78, 115, 223, 0.08);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    /* Kustomisasi Paginasi Lembut */
+    .pagination {
+        margin-bottom: 0;
+        gap: 4px;
+    }
+
+    .pagination .page-item .page-link {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px !important;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        color: #475569;
+        background-color: #ffffff;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .pagination .page-item .page-link:hover {
+        background-color: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: var(--primary-gradient);
+        border-color: transparent;
         color: white !important;
+        box-shadow: 0 4px 10px rgba(78, 115, 223, 0.25);
     }
 </style>
 
 <div class="main-container">
-    {{-- Header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="page-title mb-0">Data Pendaftaran Wisata</h4>
-            <p class="text-muted small">Verifikasi dan kelola data pendaftar wisata.</p>
+    {{-- Header Section --}}
+    <div class="row align-items-center g-3 mb-4">
+        <div class="col-12 col-md-7 text-start">
+            <h4 class="page-title mb-1">
+                Pendaftar Wisata
+            </h4>
+            <p class="text-muted small mb-0">Kelola dan pantau list data pendaftaran dari setiap wisata </p>
         </div>
 
-        <div class="search-box">
-            <form action="{{ route('admin.pendaftaran.index') }}" method="GET">
-                <i class="bi bi-search"></i>
-                <input type="text" name="search" class="form-control search-input shadow-sm" 
-                       placeholder="Cari pendaftar..." value="{{ request('search') }}">
-            </form>
+        <div class="col-12 col-md-5 d-flex justify-content-md-end">
+            <div class="search-box">
+                <form action="{{ route('admin.pendaftaran.index') }}" method="GET">
+                    <i class="bi bi-search"></i>
+                    <input type="text" name="search" class="form-control search-input shadow-sm" 
+                           placeholder="Cari wisata pilihan..." value="{{ request('search') }}">
+                </form>
+            </div>
         </div>
     </div>
 
-    {{-- Tabel Card --}}
+    {{-- Main Content Card --}}
     <div class="card-modern">
         <div class="table-responsive">
-            <table class="table table-custom">
+            <table class="table table-custom mb-0">
                 <thead>
                     <tr>
-                        <th width="50" class="text-center">No</th>
-                        <th>User & Kontak</th>
+                        <th width="70" class="text-center">No</th>
                         <th>Destinasi Wisata</th>
-                        <th class="text-center">Tanggal Daftar</th>
-                        <th class="text-center">Status</th>
-                        <th width="200" class="text-center">Aksi</th>
+                        <th width="180" class="text-center">Total Pendaftar</th>
+                        <th width="120" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($pendaftaran as $index => $item)
+                    @forelse($wisata as $index => $item)
                     <tr>
-                        <td class="text-center fw-bold text-muted">{{ $pendaftaran->firstItem() + $index }}</td>
-                        <td>
-                            <div class="fw-bold text-dark">{{ $item->user->nama_user ?? '-' }}</div>
-                            <div class="small text-muted">{{ $item->user->email ?? '-' }}</div>
+                        <td class="text-center fw-bold text-secondary opacity-75">
+                            {{ $wisata->firstItem() + $index }}
                         </td>
                         <td>
-                            <div class="fw-bold text-primary">{{ $item->jwisata->nama_wisata ?? '-' }}</div>
-                            <div class="small text-muted">
-                                <i class="bi bi-calendar-event me-1"></i>{{ $item->jwisata->tanggal_wisata ?? '-' }}
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-destination-box">
+                                    <i class="bi bi-geo-alt-fill text-primary fs-5"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-bold text-dark mb-0 fs-6">{{ $item->nama_wisata }}</span>
+                                    <span class="text-muted" style="font-size: 0.8rem;">
+                                        <i class="bi bi-calendar3 me-1 text-secondary"></i> 
+                                        {{ $item->tanggal_wisata ? \Carbon\Carbon::parse($item->tanggal_wisata)->locale('id')->translatedFormat('d M Y') : '-' }}
+                                    </span>
+                                </div>
                             </div>
                         </td>
-                        <td class="text-center small">
-                            {{ $item->created_at ? $item->created_at->format('d M Y') : '-' }}
-                        </td>
                         <td class="text-center">
-                            @if($item->status_daftar == 'menunggu')
-                                <span class="badge-status bg-warning text-dark">Menunggu</span>
-                            @elseif($item->status_daftar == 'diterima')
-                                <span class="badge-status bg-success text-white">Diterima</span>
-                            @else
-                                <span class="badge-status bg-danger text-white">Ditolak</span>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                @if($item->status_daftar == 'menunggu')
-                                    {{-- Terima --}}
-                                    <form action="{{ route('admin.pendaftaran.updateStatus', $item->id_daftar_wisata) }}" method="POST" id="form-terima-{{ $item->id_daftar_wisata }}">
-                                        @csrf
-                                        <input type="hidden" name="status_daftar" value="diterima">
-                                        <button type="button" class="btn btn-sm btn-approve p-2 px-3 fw-bold shadow-sm" 
-                                                onclick="confirmStatus('terima', '{{ $item->id_daftar_wisata }}')" title="Terima">
-                                            <i class="bi bi-check2-circle"></i>
-                                        </button>
-                                    </form>
-
-                                    {{-- Tolak --}}
-                                    <form action="{{ route('admin.pendaftaran.updateStatus', $item->id_daftar_wisata) }}" method="POST" id="form-tolak-{{ $item->id_daftar_wisata }}">
-                                        @csrf
-                                        <input type="hidden" name="status_daftar" value="ditolak">
-                                        <button type="button" class="btn btn-sm btn-reject p-2 px-3 fw-bold shadow-sm" 
-                                                onclick="confirmStatus('tolak', '{{ $item->id_daftar_wisata }}')" title="Tolak">
-                                            <i class="bi bi-x-circle"></i>
-                                        </button>
-                                    </form>
-                                @endif
-
-                                {{-- Hapus --}}
-                                <form action="{{ route('admin.pendaftaran.destroy', $item->id_daftar_wisata) }}" method="POST" id="form-hapus-{{ $item->id_daftar_wisata }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-delete p-2 px-3 fw-bold shadow-sm" 
-                                            onclick="confirmDelete('{{ $item->id_daftar_wisata }}')" title="Hapus Data">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </form>
+                            <div class="count-badge">
+                                <i class="bi bi-people-fill text-primary"></i>
+                                <span>{{ $item->pendaftaran_count }} Orang</span>
                             </div>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('admin.pendaftaran.show', $item->id_wisata) }}" 
+                               class="btn-action-view" title="Lihat Detail Pendaftar">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <i class="bi bi-inbox text-light display-1"></i>
-                            <p class="text-muted mt-3">Tidak ada data pendaftar yang ditemukan.</p>
+                        <td colspan="4" class="text-center py-5">
+                            <div class="py-4">
+                                <i class="bi bi-journal-x text-muted opacity-50" style="font-size: 3.5rem;"></i>
+                                <h6 class="text-dark fw-bold mt-3">Data Wisata Tidak Ditemukan</h6>
+                                <p class="text-muted small">Coba cari kata kunci lain atau periksa kembali data Anda.</p>
+                            </div>
                         </td>
                     </tr>
                     @endforelse
@@ -203,68 +272,16 @@
         </div>
 
         {{-- Footer Paginasi --}}
-        <div class="mt-4 d-flex justify-content-between align-items-center border-top pt-3">
-            <div class="small text-muted fw-bold">
-                Menampilkan <span class="text-primary">{{ $pendaftaran->firstItem() ?? 0 }}</span> 
-                sampai <span class="text-primary">{{ $pendaftaran->lastItem() ?? 0 }}</span> 
-                dari <span class="text-primary">{{ $pendaftaran->total() }}</span> pendaftar
+        <div class="mt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 border-top pt-4">
+            <div class="small text-secondary fw-semibold">
+                Menampilkan <span class="text-primary fw-bold">{{ $wisata->firstItem() ?? 0 }}</span> 
+                sampai <span class="text-primary fw-bold">{{ $wisata->lastItem() ?? 0 }}</span> 
+                dari <span class="text-primary fw-bold">{{ $wisata->total() }}</span> total destinasi wisata
             </div>
-            <nav aria-label="Page navigation">
-                {{ $pendaftaran->onEachSide(1)->links('pagination::bootstrap-5') }}
+            <nav>
+                {{ $wisata->onEachSide(1)->links('pagination::bootstrap-5') }}
             </nav>
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // Konfirmasi Terima/Tolak
-    function confirmStatus(action, id) {
-        const isApprove = action === 'terima';
-        Swal.fire({
-            title: isApprove ? 'Terima Pendaftaran?' : 'Tolak Pendaftaran?',
-            text: isApprove ? "User akan dinyatakan terdaftar dalam perjalanan ini." : "User akan mendapatkan status ditolak.",
-            icon: isApprove ? 'question' : 'warning',
-            showCancelButton: true,
-            confirmButtonColor: isApprove ? '#2e7d32' : '#e53e3e',
-            cancelButtonColor: '#858796',
-            confirmButtonText: isApprove ? 'Ya, Terima!' : 'Ya, Tolak!',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById(isApprove ? 'form-terima-' + id : 'form-tolak-' + id).submit();
-            }
-        })
-    }
-
-    // Konfirmasi Hapus
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'Hapus Data Pendaftaran?',
-            text: "Data yang dihapus tidak dapat dikembalikan!",
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonColor: '#c62828',
-            cancelButtonColor: '#858796',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('form-hapus-' + id).submit();
-            }
-        })
-    }
-
-    @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 2000
-        });
-    @endif
-</script>
 @endsection

@@ -21,4 +21,14 @@ class JSenam extends Model
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
+
+    public function absensi()
+    {
+        return $this->hasMany(AbsensiSenam::class, 'id_senam');
+    }
+    public function pembayaran()
+    {
+        return $this->hasOne(PembayaranIuran::class, 'id_senam', 'id_senam')
+            ->where('id_user', auth()->user()->id_user);
+    }
 }

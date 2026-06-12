@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'foto',
-        'id_role'
+        'id_role',
+        'saldo_iuran'
     ];
 
     protected $hidden = [
@@ -41,5 +42,9 @@ class User extends Authenticatable
     public function pendaftaran()
     {
         return $this->hasMany(PendaftaranWisata::class, 'id_user', 'id_user');
+    }
+    public function absensiSenam()
+    {
+        return $this->hasMany(AbsensiSenam::class, 'id_user');
     }
 }

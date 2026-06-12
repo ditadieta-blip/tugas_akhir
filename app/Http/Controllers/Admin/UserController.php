@@ -8,37 +8,51 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = User::with('role');
+public function index(Request $request)
+{
+    $query = User::with('role');
 
-        if ($request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('nama_user', 'like', '%' . $request->search . '%')
-                ->orWhere('email', 'like', '%' . $request->search . '%')
-                ->orWhere('no_hp', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        $users = $query->paginate(5)->withQueryString();
-
-        $jumlahAnggota = User::whereHas('role', function ($q) {
-            $q->where('nama_role', 'anggota');
-        })->count();
-
-        $jumlahInstruktur = User::whereHas('role', function ($q) {
-            $q->where('nama_role', 'instruktur');
-        })->count();
-
-        return view('admin.user.index', compact(
-            'users',
-            'jumlahAnggota',
-            'jumlahInstruktur'
-        ));
+    // Pencarian (Kode Utama Anda tetap aman)
+    if ($request->search) {
+        $query->where(function ($q) use ($request) {
+            $q->where('nama_user', 'like', '%' . $request->search . '%')
+              ->orWhere('email', 'like', '%' . $request->search . '%')
+              ->orWhere('no_hp', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // TAMBAHAN: Filter berdasarkan ID Role jika dipilih oleh user
+    if ($request->role) {
+        $query->where('id_role', $request->role); 
+        // Catatan: Ganti 'id_role' di atas dengan nama kolom foreign key role yang ada di tabel users Anda (misal: role_id)
+    }
+
+    $users = $query->paginate(5)->withQueryString();
+
+    // Menghitung jumlah (Kode Utama Anda tetap aman)
+    $jumlahAnggota = User::whereHas('role', function ($q) {
+        $q->where('nama_role', 'anggota');
+    })->count();
+
+    $jumlahInstruktur = User::whereHas('role', function ($q) {
+        $q->where('nama_role', 'instruktur');
+    })->count();
+
+    // TAMBAHAN: Ambil data semua role untuk dikirim ke dropdown filter di View
+    // Pastikan Anda sudah meng-import model Role di bagian atas controller (use App\Models\Role;)
+    $roles = \App\Models\Role::all(); 
+
+    return view('admin.user.index', compact(
+        'users',
+        'jumlahAnggota',
+        'jumlahInstruktur',
+        'roles' // Variabel baru ditambahkan ke compact
+    ));
+}
     public function create()
     {
         $roles = Role::all();
@@ -49,7 +63,7 @@ class UserController extends Controller
     {
         $request->validate([
             'nama_user' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:user,email',
             'no_hp' => 'required|numeric|digits_between:10,15',
             'alamat' => 'required|string|max:255',
             'id_role' => 'required|exists:role,id_role',
@@ -110,6 +124,35 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        $request->validate([
+            'nama_user' => 'required|string|max:100',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('user', 'email')->ignore($user->id_user, 'id_user'),
+            ],
+            'no_hp' => 'required|numeric|digits_between:10,15',
+            'alamat' => 'required|string|max:255',
+            'id_role' => 'required|exists:role,id_role',
+            'password' => 'nullable|min:6'
+        ], [
+
+            'nama_user.required' => 'Nama lengkap wajib diisi.',
+            'nama_user.max' => 'Nama maksimal 100 karakter.',
+
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan.',
+
+            'no_hp.required' => 'Nomor WhatsApp wajib diisi.',
+            'no_hp.numeric' => 'Nomor WhatsApp harus angka.',
+            'no_hp.digits_between' => 'Nomor WhatsApp harus 10-15 digit.',
+
+            'alamat.required' => 'Alamat wajib diisi.',
+            'id_role.required' => 'Role wajib dipilih.',
+            'password.min' => 'Password minimal 6 karakter.'
+        ]);
+
         $data = [
             'nama_user' => $request->nama_user,
             'alamat' => $request->alamat,
@@ -118,14 +161,14 @@ class UserController extends Controller
             'id_role' => $request->id_role,
         ];
 
-        if ($request->password) {
+        if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
 
         return redirect()->route('admin.user.index')
-                        ->with('success', 'User berhasil diupdate');
+            ->with('success', 'User berhasil diupdate');
     }
     public function destroy($id)
     {
@@ -144,53 +187,68 @@ class UserController extends Controller
     // =======================
     // PROFIL 
     // =======================
-    public function updateProfil(Request $request)
+   public function updateProfil(Request $request)
     {
         $user = Auth::user();
 
-        // 1. VALIDASI (Tambahkan kolom baru jika ada, misal: no_hp, alamat)
-        $request->validate([
+        $request->validateWithBag('profil', [
             'nama_user' => 'required|string|max:100',
-            'email'     => 'required|email|unique:users,email,' . $user->id,
-            'no_hp'     => 'nullable|string|max:15',
-            'alamat'    => 'nullable|string|max:255',
-            'password'  => 'nullable|min:6',
-            'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
 
-        // 2. DATA DASAR
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('user', 'email')->ignore($user->id_user, 'id_user'),
+            ],
+
+            'no_hp' => 'required|numeric|digits_between:10,15',
+
+            'alamat' => 'required|string|max:255',
+
+            'password' => 'nullable|min:6',
+
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+
+        ], [
+
+            'nama_user.required' => 'Nama wajib diisi.',
+            'nama_user.max' => 'Nama maksimal 100 karakter.',
+
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan.',
+
+            'no_hp.required'=>'Nomor WhatsApp wajib diisi.',
+            'no_hp.numeric' => 'Nomor WhatsApp harus berupa angka.',
+            'no_hp.digits_between' => 'Nomor WhatsApp harus 10 sampai 15 digit.',
+            'alamat.required' => 'Alamat wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Foto harus jpg, jpeg, atau png.',
+            'foto.max' => 'Ukuran foto maksimal 2MB.'
+        ]);
         $data = [
             'nama_user' => $request->nama_user,
-            'email'     => $request->email,
-            'no_hp'     => $request->no_hp,
-            'alamat'    => $request->alamat,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
         ];
-
-        // 3. PASSWORD (Hanya jika diisi)
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
-
-        // 4. FOTO PROFIL
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika ada
+
             if ($user->foto && Storage::disk('public')->exists('foto/' . $user->foto)) {
                 Storage::disk('public')->delete('foto/' . $user->foto);
             }
-
             $file = $request->file('foto');
             $namaFile = uniqid('user_') . '.' . $file->getClientOriginalExtension();
-            
-            // Simpan ke storage/app/public/foto
             $file->storeAs('foto', $namaFile, 'public');
             $data['foto'] = $namaFile;
         }
-
-        // 5. UPDATE KE DATABASE
         $user->update($data);
 
-        // 6. REDIRECT BACK (Penting untuk Modal)
-        // Gunakan back() agar user tetap di halaman yang sama saat modal tertutup
-        return redirect()->back()->with('success_profil', 'Profil berhasil diperbarui!');
+        return redirect()->back()
+            ->with('success_profil', 'Profil berhasil diperbarui!');
     }
 }

@@ -12,6 +12,8 @@ class PembayaranIuran extends Model
         'id_user',
         'id_senam',
         'nominal_bayar',
+        'nominal_dibayar',
+        'metode',
         'status',
         'midtrans_order_id',
         'midtrans_snap_token',
@@ -26,6 +28,11 @@ class PembayaranIuran extends Model
 
     public function senam()
     {
-        return $this->belongsTo(Senam::class, 'id_senam');
+        return $this->belongsTo(JSenam::class, 'id_senam');
+    }
+
+    public function absensi()
+    {
+        return $this->hasMany(AbsensiSenam::class, 'id_senam', 'id_senam');
     }
 }

@@ -12,8 +12,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // 1. Alias untuk middleware role kamu
         $middleware->alias([
             'role' => RoleMiddleware::class,
+        ]);
+
+        // 2. Kecualikan route callback dari proteksi CSRF
+        $middleware->validateCsrfTokens(except: [
+            '/midtrans/callback', // Ini yang paling penting, sesuai dengan route kamu
+            'https://*.ngrok-free.app/*', // Supaya domain ngrok tidak dicegat
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
